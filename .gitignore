@@ -3,6 +3,9 @@
 *.ap_
 *.aab
 
+# Backup folder
+.git.backup/
+
 # Files for the ART/Dalvik VM
 *.dex
 
