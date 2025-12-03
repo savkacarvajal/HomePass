@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Colores IoT HomePass -->
+    <color name="green_success">#28a745</color>
+    <color name="red_error">#dc3545</color>
+    <color name="yellow_warning">#ffc107</color>
+    <color name="gray_inactive">#6c757d</color>
+
+    <!-- Colores de texto -->
+    <color name="primary_text">#212529</color>
+    <color name="secondary_text">#6c757d</color>
+
+    <!-- Colores de fondo -->
+    <color name="background_color">#f8f9fa</color>
+    <color name="card_border">#dee2e6</color>
 </resources>

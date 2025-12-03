@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.flash" />
@@ -39,6 +40,12 @@
         <activity android:name=".ListarUsuariosActivity" />
         <activity android:name=".SensoresActivity" />
         <activity android:name=".DesarrolladorActivity" />
+
+        <!-- Nuevas Activities IoT -->
+        <activity android:name=".GestionSensoresActivity"
+            android:label="Gestión de Sensores" />
+        <activity android:name=".HistorialEventosActivity"
+            android:label="Historial de Eventos" />
     </application>
 
 </manifest>

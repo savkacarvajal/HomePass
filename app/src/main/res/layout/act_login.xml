@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Bienvenido a ConnectSense"
+        android:text="Bienvenido a HomePass"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintBottom_toTopOf="@+id/textFieldEmail"
         app:layout_constraintEnd_toEndOf="parent"

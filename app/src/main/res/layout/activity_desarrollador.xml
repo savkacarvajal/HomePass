@@ -15,7 +15,7 @@
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Equipo de Desarrollo"
+            android:text="@string/equipo_desarrollo"
             android:textAppearance="?attr/textAppearanceHeadline5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +27,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerInside"
+            android:contentDescription="@string/logo_app"
             app:srcCompat="@drawable/logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +57,7 @@
                     app:cardElevation="2dp"
                     app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="2dp"
-                <TextView
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -64,41 +65,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
+                        android:contentDescription="@string/avatar_savka"
                         android:src="@drawable/savka" />
                 </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/textNombre"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/savka_nombre"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    app:layout_constraintStart_toEndOf="@+id/cardAvatarSavka"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cardAvatarSavka" />
 
                 <TextView
                     android:id="@+id/textRol"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Rol en el Equipo"
-                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/savka_rol"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:layout_constraintStart_toEndOf="@+id/cardAvatarSavka"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cardAvatarSavka" />
+                    app:layout_constraintTop_toBottomOf="@+id/textNombre" />
 
                 <TextView
                     android:id="@+id/textCorreo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:drawablePadding="8dp"
-                    android:text="correo.institucional@inacapmail.cl"
-                    app:layout_constraintStart_toEndOf="@+id/cardAvatarSavka"
+                    android:text="@string/savka_correo"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:drawableStartCompat="@android:drawable/ic_dialog_email"
-                    app:layout_constraintTop_toBottomOf="@+id/imageAvatar"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardAvatarSavka" />
 
                 <TextView
                     android:id="@+id/textInstitucion"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Institución / Carrera / Sección"
+                    android:text="@string/savka_institucion"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:layout_constraintTop_toBottomOf="@+id/textCorreo"
-                    app:layout_constraintTop_toBottomOf="@+id/cardAvatarSavka"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
@@ -106,7 +121,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="github.com/usuario"
+                    android:text="@string/savka_github"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     android:autoLink="web"
                     app:layout_constraintTop_toBottomOf="@+id/textInstitucion"
                     app:layout_constraintStart_toStartOf="parent"
@@ -131,26 +147,15 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
-                <ImageView
-                    android:id="@+id/imageAvatar2"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@android:drawable/ic_dialog_info"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textNombre2"
-                    android:layout_width="0dp"
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardAvatarDante"
-                    android:text="Nombre y Apellidos 2"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     app:cardCornerRadius="40dp"
                     app:cardElevation="2dp"
                     app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="2dp"
-                <TextView
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -158,28 +163,53 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
+                        android:contentDescription="@string/avatar_dante"
                         android:src="@drawable/dante" />
                 </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/textNombre2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/dante_nombre"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    app:layout_constraintStart_toEndOf="@+id/cardAvatarDante"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cardAvatarDante" />
+
+                <TextView
+                    android:id="@+id/textRol2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/dante_rol"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintStart_toEndOf="@+id/cardAvatarDante"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textNombre2" />
 
                 <TextView
                     android:id="@+id/textCorreo2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:drawablePadding="8dp"
-                    android:text="correo.institucional@inacapmail.cl"
-                    app:layout_constraintStart_toEndOf="@+id/cardAvatarDante"
+                    android:text="@string/dante_correo"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:drawableStartCompat="@android:drawable/ic_dialog_email"
-                    app:layout_constraintTop_toTopOf="@+id/cardAvatarDante" />
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardAvatarDante" />
 
                 <TextView
                     android:id="@+id/textInstitucion2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toEndOf="@+id/cardAvatarDante"
+                    android:text="@string/dante_institucion"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:layout_constraintTop_toBottomOf="@+id/textCorreo2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -189,10 +219,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="github.com/usuario2"
+                    android:text="@string/dante_github"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     android:autoLink="web"
                     app:layout_constraintTop_toBottomOf="@+id/textInstitucion2"
-                    app:layout_constraintTop_toBottomOf="@+id/cardAvatarDante"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -200,3 +231,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
+

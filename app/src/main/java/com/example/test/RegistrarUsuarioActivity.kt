@@ -60,7 +60,7 @@ class RegistrarUsuarioActivity : AppCompatActivity() {
 
     private fun registrarUsuarioEnServidor(nombres: String, apellidos: String, email: String, contrasena: String) {
         // Esta URL ahora funcionará gracias al cambio en AndroidManifest.xml
-        val url = "http://44.199.155.199/register.php"
+        val url = Constants.API.REGISTER
         val queue = Volley.newRequestQueue(this)
 
         val stringRequest = object : StringRequest(Method.POST, url,

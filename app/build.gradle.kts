@@ -56,6 +56,12 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")             // Para la conexión de red (Login, Punto 2)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
+    // Dependencias IoT HomePass
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")         // Para peticiones HTTP
+    implementation("com.google.code.gson:gson:2.10.1")           // Para parsear JSON
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0") // Para pull-to-refresh
+    implementation("androidx.recyclerview:recyclerview:1.3.2")   // Para listas
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

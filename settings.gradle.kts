@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "HomePass"
 include(":app")
-include(":homepass")

@@ -119,7 +119,7 @@ class RecuperarContrasenaActivity : AppCompatActivity() {
     private fun validarCodigo(email: String, code: String) {
         showLoadingDialog("Validando Código")
         // Llama al script que compara el código, revisa la caducidad (1 min) y borra el registro
-        val url = "http://44.199.155.199/validar_codigo.php"
+        val url = Constants.API.VALIDAR_CODIGO
         val queue = Volley.newRequestQueue(this)
 
         val stringRequest = object : StringRequest(Method.POST, url,

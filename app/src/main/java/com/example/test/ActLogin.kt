@@ -1,5 +1,6 @@
 package com.example.test
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -9,7 +10,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.test.databinding.ActLoginBinding // Clase View Binding generada
+import com.example.test.databinding.ActLoginBinding
 import org.json.JSONObject
 
 class ActLogin : AppCompatActivity() {
@@ -27,7 +28,6 @@ class ActLogin : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Uso de View Binding: Acceso directo a las vistas
         binding.button2.setOnClickListener {
             val email = binding.editTextText.text.toString().trim()
             val password = binding.editTextTextPassword.text.toString()
@@ -44,26 +44,21 @@ class ActLogin : AppCompatActivity() {
             autenticarUsuario(email, password)
         }
 
-        // Registrarme
         binding.textView2.setOnClickListener {
             val intent = Intent(this, RegistrarUsuarioActivity::class.java)
             startActivity(intent)
         }
 
-        // ¿Olvidé mi Contraseña?
         binding.textView3.setOnClickListener {
-            // Corrección del error tipográfico
             val intent = Intent(this, RecuperarContrasenaActivity::class.java)
             startActivity(intent)
         }
     }
 
-    // La variable local se pasa aquí como 'contrasena'
     private fun autenticarUsuario(email: String, contrasena: String) {
         showLoadingDialog()
 
-        // URL del servicio de login (permite http gracias al Manifest)
-        val url = "http://44.199.155.199/apiconsultausu.php"
+        val url = Constants.API.LOGIN
         val queue = Volley.newRequestQueue(this)
 
         val stringRequest = object : StringRequest(Method.POST, url,
@@ -74,6 +69,12 @@ class ActLogin : AppCompatActivity() {
                     val status = jsonResponse.getString("status")
 
                     if (status == "success") {
+                        // Guardar datos del usuario en SharedPreferences
+                        val userData = jsonResponse.optJSONObject("user")
+                        if (userData != null) {
+                            guardarDatosUsuario(userData)
+                        }
+
                         SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("¡Ingreso exitoso!")
                             .setConfirmText("Continuar")
@@ -81,7 +82,7 @@ class ActLogin : AppCompatActivity() {
                                 it.dismissWithAnimation()
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
-                                finish() // Termina la actividad de Login
+                                finish()
                             }
                             .show()
                     } else {
@@ -107,10 +108,7 @@ class ActLogin : AppCompatActivity() {
             override fun getParams(): MutableMap<String, String> {
                 val params = HashMap<String, String>()
                 params["email"] = email
-
-                // Corrección para coincidir con la BD 'contrasena'
                 params["contrasena"] = contrasena
-
                 return params
             }
         }
@@ -118,7 +116,20 @@ class ActLogin : AppCompatActivity() {
         queue.add(stringRequest)
     }
 
-    // --- Funciones de Utilidad (SweetAlert) ---
+    private fun guardarDatosUsuario(userData: JSONObject) {
+        val prefs = getSharedPreferences(Constants.Prefs.PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+
+        // Guardar datos del usuario
+        editor.putInt(Constants.Prefs.KEY_USER_ID, userData.optInt("id_usuario", 0))
+        editor.putString(Constants.Prefs.KEY_USER_EMAIL, userData.optString("email", ""))
+        editor.putString(Constants.Prefs.KEY_USER_NAME, userData.optString("nombre", "Usuario"))
+        editor.putString(Constants.Prefs.KEY_USER_ROL, userData.optString("rol", Constants.Roles.OPERADOR))
+        editor.putInt(Constants.Prefs.KEY_DEPARTAMENTO_ID, userData.optInt("id_departamento", 1))
+        editor.putBoolean(Constants.Prefs.KEY_IS_LOGGED_IN, true)
+
+        editor.apply()
+    }
 
     private fun showLoadingDialog() {
         if (progressDialog == null) {

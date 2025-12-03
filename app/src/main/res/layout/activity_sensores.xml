@@ -142,16 +142,20 @@
             app:iconSize="32dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_flashlight"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="72dp"
             android:layout_marginTop="16dp"
             android:text="Controlar Linterna"
-            app:icon="@drawable/ic_flashlight_off" />
-            android:layout_height="72dp"
-    </LinearLayout>
-</ScrollView>
             android:textSize="18sp"
             app:icon="@drawable/ic_flashlight_off"
             app:iconSize="32dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>
+

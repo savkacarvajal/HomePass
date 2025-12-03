@@ -190,7 +190,7 @@ class ListarUsuariosActivity : AppCompatActivity() {
     }
 
     private fun deleteUserFromServer(id: Long, sDialog: SweetAlertDialog) {
-        val url = "http://44.199.155.199/delete_user.php"
+        val url = Constants.API.DELETE_USER
         val queue = Volley.newRequestQueue(this)
         val request = object : StringRequest(Method.POST, url,
             Response.Listener {

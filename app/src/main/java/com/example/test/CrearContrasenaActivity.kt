@@ -60,7 +60,7 @@ class CrearContrasenaActivity : AppCompatActivity() {
         showLoadingDialog("Actualizando Contraseña")
 
         // Reemplaza con la URL de tu servicio para modificar clave
-        val url = "http://44.199.155.199/apimodificarclave.php"
+        val url = Constants.API.MODIFICAR_CLAVE
         val queue = Volley.newRequestQueue(this)
 
         val stringRequest = object : StringRequest(Method.POST, url,

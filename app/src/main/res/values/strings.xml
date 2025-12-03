@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">Test</string>
+    <string name="app_name">HomePass</string>
+
+    <!-- Desarrollador Activity -->
+    <string name="equipo_desarrollo">Equipo de Desarrollo</string>
+    <string name="logo_app">Logo de la aplicación</string>
+
+    <!-- Desarrollador 1 - Savka -->
+    <string name="avatar_savka">Avatar de Savka</string>
+    <string name="savka_nombre">Savka Carvajal</string>
+    <string name="savka_rol">Desarrollador Full Stack</string>
+    <string name="savka_correo">savka.carvajal@inacapmail.cl</string>
+    <string name="savka_institucion">INACAP / Ingeniería en CiberSeguridad</string>
+    <string name="savka_github">github.com/savkacarvajal</string>
+
+    <!-- Desarrollador 2 - Dante -->
+    <string name="avatar_dante">Avatar de Dante</string>
+    <string name="dante_nombre">Dante Gutierrez</string>
+    <string name="dante_rol">Desarrollador IoT</string>
+    <string name="dante_correo">dante.gutierrez02@inacapmail.cl</string>
+    <string name="dante_institucion">INACAP / Ingeniería en Informática</string>
+    <string name="dante_github">github.com/dantegutierrez</string>
 </resources>
