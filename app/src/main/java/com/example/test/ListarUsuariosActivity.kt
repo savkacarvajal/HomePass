@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 // Importar View Bindings (Correcto)
@@ -64,34 +64,48 @@ class ListarUsuariosActivity : AppCompatActivity() {
     }
 
     private fun cargarUsuariosDesdeServidor() {
-        val url = "http://98.95.39.30/get_users.php"
+        val url = Constants.API.GET_USERS
         val queue = Volley.newRequestQueue(this)
 
-        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET, url, null,
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.GET, url, null,
             { response ->
                 try {
                     userList.clear()
-                    for (i in 0 until response.length()) {
-                        val userObject = response.getJSONObject(i)
-                        userList.add(User(
-                            id = userObject.getLong("id"),
-                            nombres = userObject.getString("nombres"),
-                            apellidos = userObject.getString("apellidos"),
-                            email = userObject.getString("email")
-                        ))
+
+                    val success = response.getBoolean("success")
+                    if (success && response.has("usuarios")) {
+                        val usuariosArray = response.getJSONArray("usuarios")
+
+                        for (i in 0 until usuariosArray.length()) {
+                            val userObject = usuariosArray.getJSONObject(i)
+                            userList.add(User(
+                                id = userObject.getLong("id_usuario"),
+                                nombres = userObject.getString("nombre"),
+                                apellidos = userObject.getString("apellido"),
+                                email = userObject.getString("email")
+                            ))
+                        }
                     }
+
                     userAdapter.updateUsers(userList)
                     userAdapter.filter(binding.editTextSearch.text.toString())
-                    checkEmptyState() // 🌟 (Añadido) Para manejar el estado vacío al cargar
+                    checkEmptyState()
                 } catch (e: JSONException) {
-                    showErrorAlert("Error de Parseo", "La respuesta del servidor no es válida.")
+                    showErrorAlert("Error de Parseo", "La respuesta del servidor no es válida: ${e.message}")
                 }
             },
             { error ->
                 showErrorAlert("Error de Red", "No se pudo obtener la lista de usuarios. Error: ${error.message}")
             }
-        )
-        queue.add(jsonArrayRequest)
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                return headers
+            }
+        }
+
+        queue.add(jsonObjectRequest)
     }
 
     // 🌟 INICIO: FUNCIÓN CORREGIDA PARA COINCIDIR CON EL XML 🌟

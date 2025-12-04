@@ -78,6 +78,9 @@ class MainActivity : AppCompatActivity() {
             binding.cardGestionUsuarios?.visibility = View.GONE
             binding.btnCerrarBarrera?.visibility = View.GONE
         }
+
+        // Ocultar card de sensores (temperatura/ampolleta) - no va en esta evaluación
+        binding.cardSensores?.visibility = View.GONE
     }
 
     private fun setupClickListeners() {
