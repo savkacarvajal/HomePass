@@ -29,6 +29,14 @@ local.properties
 proguard/
 
 # Log Files
+
+# ⚠️ ARCHIVOS DE CONFIGURACIÓN SENSIBLES - NO SUBIR A GIT
+email_config.php
+conexion.php
+
+# Mantener solo los archivos de ejemplo
+!email_config.example.php
+!conexion.example.php
 *.log
 
 # Android Studio Navigation editor temp files
