@@ -1,4 +1,4 @@
-# 📱 Sistema de Gestión de Usuarios - Android + PHP
+# 🏠 HomePass IoT - Sistema de Gestión y Control de Acceso
 
 <div align="center">
 
@@ -6,11 +6,12 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![IoT](https://img.shields.io/badge/IoT-00979D?style=for-the-badge&logo=arduino&logoColor=white)
 ![Material Design](https://img.shields.io/badge/Material%20Design-757575?style=for-the-badge&logo=material-design&logoColor=white)
 
-**Aplicación Android completa para gestión de usuarios con backend PHP y MySQL**
+**Aplicación Android completa para gestión de usuarios y control de acceso IoT con backend PHP y MySQL**
 
-[Características](#-características) • [Capturas](#-capturas) • [Instalación](#-instalación) • [Uso](#-uso) • [API](#-api-backend)
+[Características](#-características) • [Instalación](#-instalación) • [Uso](#-uso) • [API](#-api-backend) • [Documentación](#-documentación-adicional)
 
 </div>
 
@@ -18,7 +19,9 @@
 
 ## 📋 Descripción
 
-Sistema integral de gestión de usuarios desarrollado en **Kotlin** para Android, con backend en **PHP** y base de datos **MySQL**. La aplicación incluye autenticación completa, CRUD de usuarios, recuperación de contraseña por email, gestión de sensores y una interfaz moderna basada en Material Design.
+Sistema integral **HomePass IoT** de gestión de usuarios y control de acceso desarrollado en **Kotlin** para Android, con backend en **PHP** y base de datos **MySQL**. La aplicación incluye autenticación completa, CRUD de usuarios, recuperación de contraseña por email (funcionando con cualquier proveedor), gestión de sensores IoT y una interfaz moderna basada en Material Design.
+
+**Estado del Proyecto:** ✅ Completado y Funcional | **Última Actualización:** Diciembre 2025
 
 ## ✨ Características
 
@@ -26,8 +29,9 @@ Sistema integral de gestión de usuarios desarrollado en **Kotlin** para Android
 - **Splash Screen** animado con Lottie
 - **Sistema de Login** con validación en tiempo real
 - **Registro de usuarios** con validaciones robustas
-- **Recuperación de contraseña** mediante código enviado por email
-- **Creación y modificación de contraseñas** con confirmación
+- **Recuperación de contraseña** ✅ Funcional - Envía códigos por email a cualquier proveedor (Gmail, INACAP, Outlook, etc.)
+- **Email HTML profesional** con códigos de 5 dígitos y expiración de 15 minutos
+- **Contraseñas cifradas** con bcrypt para máxima seguridad
 
 ### 👥 Gestión de Usuarios
 - **Listado completo** de usuarios con RecyclerView
@@ -122,21 +126,25 @@ define('DB_PASS', 'tu_contraseña');
 define('DB_NAME', 'pnkcl_iot');
 ```
 
-#### Configurar Email (Opcional para recuperación)
+#### Configurar Email (PHPMailer)
 
-1. Editar `email_config.php` con tus credenciales SMTP:
-```php
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'tu_email@gmail.com');
-define('SMTP_PASS', 'tu_contraseña_app');
-```
+> ✅ **Estado:** Configurado y funcional. Envía a cualquier proveedor de email.
 
-2. Instalar PHPMailer (si no está instalado):
+1. Instalar PHPMailer:
 ```bash
 composer require phpmailer/phpmailer
-# O ejecutar: instalar_phpmailer.sh
 ```
+
+2. Configurar `email_config.php` (ya configurado):
+```php
+// Gmail SMTP - Requiere contraseña de aplicación
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USERNAME', 'tu_email@gmail.com');
+define('SMTP_PASSWORD', 'contraseña_app_16_chars');
+```
+
+**Documentación completa:** Ver `SISTEMA_RECUPERACION_PASSWORD.md`
 
 #### Subir Archivos PHP al Servidor
 
@@ -286,9 +294,9 @@ File > Sync Project with Gradle Files
 
 **DELETE** `/eliminar_usuario.php?id=1`
 
-#### 📍 Recuperación de Contraseña
+#### 📍 Recuperación de Contraseña ✅
 
-**POST** `/solicitar_codigo.php`
+**POST** `/solicitar_codigo_con_email.php`
 ```json
 // Request
 {
@@ -298,8 +306,9 @@ File > Sync Project with Gradle Files
 // Response
 {
   "status": "success",
-  "message": "Código enviado al email"
+  "message": "Código enviado a tu correo electrónico"
 }
+// ✅ Envía email HTML a cualquier proveedor (Gmail, INACAP, Outlook, etc.)
 ```
 
 **POST** `/validar_codigo.php`
@@ -307,7 +316,13 @@ File > Sync Project with Gradle Files
 // Request
 {
   "email": "usuario@example.com",
-  "codigo": "123456"
+  "code": "12345"
+}
+
+// Response
+{
+  "status": "success",
+  "message": "Código válido"
 }
 ```
 
@@ -316,9 +331,17 @@ File > Sync Project with Gradle Files
 // Request
 {
   "email": "usuario@example.com",
-  "new_password": "nuevaContraseña123"
+  "nuevaclave": "nuevaContraseña123"
+}
+
+// Response
+{
+  "status": "success",
+  "message": "Contraseña actualizada exitosamente"
 }
 ```
+
+> 📖 **Documentación detallada:** Ver `SISTEMA_RECUPERACION_PASSWORD.md`
 
 ## 🏗️ Estructura del Proyecto
 
@@ -505,14 +528,24 @@ private val BASE_URL = "http://192.168.1.X/api/" // IP de tu PC
 
 ## 📚 Documentación Adicional
 
-El proyecto incluye documentación extensa en la carpeta raíz:
+Documentación técnica disponible en el repositorio:
 
-- 📧 **GUIA_CONFIGURAR_EMAIL.md** - Configuración detallada de emails
-- 🔐 **SOLUCION_ERROR_RECUPERAR.md** - Solucionar problemas de recuperación
-- 📤 **GUIA_WINSCP_COMPLETA.txt** - Subir archivos con WinSCP/FTP
-- 🐛 **SOLUCION_CONTENT_LENGTH_0.md** - Errores de respuesta vacía
-- ⚡ **INICIO_RAPIDO_EMAIL.txt** - Guía rápida email
-- 📋 **CHECKLIST_FINAL.txt** - Lista de verificación pre-despliegue
+- 📧 **SISTEMA_RECUPERACION_PASSWORD.md** - Sistema completo de recuperación con email ✅
+- 🔐 **RESPUESTA_COMPLETA_ADMIN_RECUPERACION.md** - Gestión de usuarios y recuperación
+- 📋 **crear_base_datos_completa.sql** - Script completo de base de datos
+- 🧪 **test_envio_simple.php** - Script de prueba de emails
+- 🔧 **NodeMCU_HomePass_IoT.ino** - Código para sensores IoT
+
+### Estado de Funcionalidades
+
+| Funcionalidad | Estado | Documentación |
+|---------------|--------|---------------|
+| Autenticación | ✅ Funcional | README.md |
+| CRUD Usuarios | ✅ Funcional | README.md |
+| Recuperación Password | ✅ Funcional | SISTEMA_RECUPERACION_PASSWORD.md |
+| Email a cualquier proveedor | ✅ Probado | SISTEMA_RECUPERACION_PASSWORD.md |
+| Sensores IoT | ✅ Funcional | NodeMCU_HomePass_IoT.ino |
+| Base de Datos | ✅ Funcional | crear_base_datos_completa.sql |
 
 ## 🤝 Contribuir
 
@@ -546,12 +579,13 @@ of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction...
 ```
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores
 
-**Salvador Carvajal** (savkacarvajal)
+**Savka Carvajal & Dante Gutierrez**
 
-- GitHub: [@savkacarvajal](https://github.com/savkacarvajal)
-- Email: savkacarvajal@example.com
+- Proyecto: HomePass IoT
+- Institución: INACAP 2025
+- Materia: Aplicaciones Móviles para IoT
 
 ## 🙏 Agradecimientos
 
@@ -561,6 +595,7 @@ in the Software without restriction...
 - [Volley](https://github.com/google/volley) por el networking
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer) por el envío de emails
 - Comunidad de Android Developers
+- INACAP por el apoyo académico
 
 ## 📊 Estado del Proyecto
 
@@ -569,8 +604,9 @@ in the Software without restriction...
 ![Version](https://img.shields.io/badge/version-1.0-blue.svg)
 
 **Versión Actual**: 1.0  
-**Última Actualización**: Noviembre 2025  
-**Estado**: ✅ Producción
+**Última Actualización**: Diciembre 2025  
+**Estado**: ✅ Completado y en Producción  
+**Pruebas**: ✅ Sistema de email probado con múltiples proveedores
 
 ---
 

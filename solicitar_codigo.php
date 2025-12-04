@@ -42,8 +42,8 @@ try {
     if (isset($_POST['email'])) {
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 
-        // 1. Verificar si el email existe en 'users'
-        $stmt_user = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        // 1. Verificar si el email existe en 'usuarios'
+        $stmt_user = $conn->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
 
         if (!$stmt_user) {
             $response['message'] = 'Error SQL: ' . $conn->error;
@@ -92,7 +92,7 @@ try {
 
             if ($stmt_insert->execute()) {
                 $response['status'] = 'success';
-                $response['message'] = $GENERIC_SUCCESS_MESSAGE . ' (DEBUG: ' . $code . ')';
+                $response['message'] = 'Se ha enviado un código de verificación a tu correo electrónico. Por favor revisa tu bandeja de entrada.';
             } else {
                 $response['message'] = 'ERROR SQL al insertar: ' . $conn->error;
             }

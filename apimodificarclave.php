@@ -53,7 +53,7 @@ try {
         $new_password = $request_data['new_password'];
 
         // Validar que el email existe
-        $stmt_check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt_check = $conn->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
         if (!$stmt_check) {
             $response['message'] = 'Error SQL al verificar usuario: ' . $conn->error;
             ob_end_clean();
@@ -80,7 +80,7 @@ try {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
         // Actualizar la contraseña
-        $stmt_update = $conn->prepare("UPDATE users SET contrasena = ? WHERE email = ?");
+        $stmt_update = $conn->prepare("UPDATE usuarios SET password_hash = ? WHERE email = ?");
         if (!$stmt_update) {
             $response['message'] = 'Error SQL al actualizar contraseña: ' . $conn->error;
             ob_end_clean();
