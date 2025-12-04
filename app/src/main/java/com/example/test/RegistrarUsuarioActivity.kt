@@ -24,6 +24,10 @@ class RegistrarUsuarioActivity : AppCompatActivity() {
         binding = ActivityRegistrarUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Habilitar botón de volver
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Registrar Usuario"
+
         // Usar binding para el listener
         binding.buttonRegistrar.setOnClickListener {
             // Usar binding para acceder a las vistas
@@ -139,5 +143,10 @@ class RegistrarUsuarioActivity : AppCompatActivity() {
             .setTitleText(title)
             .setContentText(message)
             .show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

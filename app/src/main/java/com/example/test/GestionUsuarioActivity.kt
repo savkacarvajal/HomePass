@@ -18,6 +18,10 @@ class GestionUsuarioActivity : AppCompatActivity() {
         binding = ActivityGestionUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Habilitar botón de volver
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Gestión de Usuarios"
+
         // 4. Usar binding para los listeners
         binding.cardIngresarUsuario.setOnClickListener {
             val intent = Intent(this, RegistrarUsuarioActivity::class.java)
@@ -28,5 +32,10 @@ class GestionUsuarioActivity : AppCompatActivity() {
             val intent = Intent(this, ListarUsuariosActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

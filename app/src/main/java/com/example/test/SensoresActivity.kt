@@ -1,8 +1,5 @@
 package com.example.test
 
-import android.content.Context
-import android.content.Intent
-import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +9,6 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-// 1. Importar View Binding (asume que el layout se llama activity_sensores.xml)
 import com.example.test.databinding.ActivitySensoresBinding
 import org.json.JSONException
 import java.text.SimpleDateFormat
@@ -28,28 +24,25 @@ class SensoresActivity : AppCompatActivity() {
 
     private var isLightBulbOn = false
 
-    private lateinit var cameraManager: CameraManager
-    private var isFlashlightOn = false
-    private lateinit var cameraId: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 3. Inicializar View Binding
         binding = ActivitySensoresBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 4. 🌟 CORRECCIÓN AQUÍ 🌟
-        // Usar el ID del MaterialButton (button_light_bulb)
+        // Habilitar botón de volver en ActionBar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Sensores"
+
+        // Solo botón de ampolleta (eliminado humedad y linterna)
         binding.buttonLightBulb.setOnClickListener {
             toggleLightBulb()
         }
+    }
 
-        setupFlashlight()
-        // 4. 🌟 CORRECCIÓN AQUÍ 🌟
-        // Usar el ID del MaterialButton (button_flashlight)
-        binding.buttonFlashlight.setOnClickListener {
-            toggleFlashlight()
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 
     private fun fechahora(): String {
@@ -64,10 +57,8 @@ class SensoresActivity : AppCompatActivity() {
             { response ->
                 try {
                     val temperatura = response.getString("temperatura")
-                    val humedad = response.getString("humedad")
-                    // 5. Usar binding para actualizar UI (esto estaba bien)
+                    // Solo temperatura, sin humedad
                     binding.txtTemp.text = "$temperatura°C"
-                    binding.txtHumedad.text = "$humedad%"
                     cambiarImagen(temperatura.toFloat())
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -102,57 +93,18 @@ class SensoresActivity : AppCompatActivity() {
     private fun toggleLightBulb() {
         isLightBulbOn = !isLightBulbOn
         val status = if (isLightBulbOn) "encendida" else "apagada"
-        // Requerimiento 11: Alternar icono de ampolleta
         val imageRes = if (isLightBulbOn) R.drawable.ic_light_on else R.drawable.ic_light_off
 
-        // 6. 🌟 CORRECCIÓN AQUÍ 🌟
-        // Actualizar el icono del *botón*
         binding.buttonLightBulb.setIconResource(imageRes)
 
-        // Requerimiento 11: Confirmación con SweetAlert
         SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
             .setTitleText("Ampolleta $status")
             .show()
     }
 
-    private fun setupFlashlight() {
-        // Requerimiento 11: Controlar linterna (hardware)
-        cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        try {
-            cameraId = cameraManager.cameraIdList[0]
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun toggleFlashlight() {
-        try {
-            isFlashlightOn = !isFlashlightOn
-            cameraManager.setTorchMode(cameraId, isFlashlightOn)
-
-            // Usar iconos específicos de linterna
-            val iconRes = if (isFlashlightOn) {
-                R.drawable.ic_flashlight_on
-            } else {
-                R.drawable.ic_flashlight_off
-            }
-            binding.buttonFlashlight.setIconResource(iconRes)
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Error de linterna")
-                .setContentText("No se pudo controlar la linterna.")
-                .show()
-        }
-    }
-
     override fun onPause() {
         super.onPause()
         mHandler.removeCallbacks(refrescar)
-        if (isFlashlightOn) { // Buena práctica: apagar linterna al salir
-            toggleFlashlight()
-        }
     }
 
     override fun onResume() {

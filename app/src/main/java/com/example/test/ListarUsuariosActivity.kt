@@ -33,6 +33,10 @@ class ListarUsuariosActivity : AppCompatActivity() {
         binding = ActivityListarUsuariosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Habilitar botón de volver
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Gestión de Usuarios"
+
         binding.recyclerViewUsers.layoutManager = LinearLayoutManager(this)
         userAdapter = UserAdapter(userList) { user ->
             showEditDeleteDialog(user)
@@ -43,18 +47,15 @@ class ListarUsuariosActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 userAdapter.filter(s.toString())
-                checkEmptyState() // 🌟 (Añadido) Para manejar el estado vacío al filtrar
+                checkEmptyState()
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
 
-        // 🌟 CORRECCIÓN: El FAB fue eliminado del XML,
-        // así que esta línea debe ser eliminada para evitar un crash.
-        /*
-        binding.fabAddUser.setOnClickListener {
-            startActivity(Intent(this, RegistrarUsuarioActivity::class.java))
-        }
-        */
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 
     override fun onResume() {
