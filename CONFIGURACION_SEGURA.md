@@ -1,5 +1,9 @@
 # 🔒 CONFIGURACIÓN SEGURA - HomePass IoT
 
+## ✅ ESTADO: HISTORIAL LIMPIADO
+
+El historial de Git fue reescrito y las credenciales fueron eliminadas completamente del repositorio.
+
 ## ⚠️ IMPORTANTE: CREDENCIALES PRIVADAS
 
 Los archivos `email_config.php` y `conexion.php` contienen credenciales sensibles y **NO deben subirse a Git**.
@@ -65,35 +69,6 @@ conexion.php
 
 ---
 
-## 🚨 SI YA SUBISTE CREDENCIALES A GIT
-
-### Opción 1: Cambiar Credenciales (RECOMENDADO)
-
-1. **Gmail:**
-   - Revoca la contraseña de aplicación actual
-   - Genera una nueva en: https://myaccount.google.com/apppasswords
-   
-2. **Base de Datos:**
-   - Cambia la contraseña de tu usuario MySQL
-   ```sql
-   ALTER USER 'root'@'localhost' IDENTIFIED BY 'NUEVA_CONTRASEÑA_SEGURA';
-   ```
-
-### Opción 2: Limpiar Historial de Git (AVANZADO)
-
-⚠️ **Advertencia:** Esto reescribirá el historial de Git
-
-```bash
-# Eliminar archivo del historial
-git filter-branch --force --index-filter \
-  "git rm --cached --ignore-unmatch email_config.php conexion.php" \
-  --prune-empty --tag-name-filter cat -- --all
-
-# Forzar push (⚠️ CUIDADO)
-git push origin --force --all
-```
-
----
 
 ## 📝 CHECKLIST DE SEGURIDAD
 
