@@ -1,4 +1,9 @@
 <?php
+// Modo producción profesional
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, PUT, OPTIONS');
@@ -6,78 +11,61 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 require_once 'conexion.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $data = json_decode(file_get_contents('php://input'), true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leer datos desde POST (form data) que envía la app Android
+    $id_usuario = isset($_POST['id']) ? intval($_POST['id']) : null;
+    $nombres = isset($_POST['nombres']) ? trim($_POST['nombres']) : null;
+    $apellidos = isset($_POST['apellidos']) ? trim($_POST['apellidos']) : null;
+    $email = isset($_POST['email']) ? trim($_POST['email']) : null;
 
-    $id_usuario = isset($data['id_usuario']) ? intval($data['id_usuario']) : null;
-    $nombres = isset($data['nombres']) ? trim($data['nombres']) : null;
-    $apellidos = isset($data['apellidos']) ? trim($data['apellidos']) : null;
-    $email = isset($data['email']) ? trim($data['email']) : null;
-    $rut = isset($data['rut']) ? trim($data['rut']) : null;
-    $telefono = isset($data['telefono']) ? trim($data['telefono']) : null;
-    $estado = isset($data['estado']) ? trim($data['estado']) : null;
-    $rol = isset($data['rol']) ? trim($data['rol']) : null;
-
-    if (!$id_usuario) {
+    if (!$id_usuario || !$nombres || !$apellidos || !$email) {
         echo json_encode([
-            'success' => false,
-            'mensaje' => 'ID de usuario requerido'
+            'status' => 'error',
+            'message' => 'Todos los campos son requeridos'
         ]);
         exit;
     }
 
-    // Construir query dinámicamente
-    $updates = [];
-    $params = [];
-    $types = "";
+    // Verificar si el email ya existe en otro usuario
+    $sql_check = "SELECT id_usuario FROM usuarios WHERE email = ? AND id_usuario != ?";
+    $stmt_check = $conn->prepare($sql_check);
+    $stmt_check->bind_param("si", $email, $id_usuario);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
 
-    if ($nombres) {
-        $updates[] = "nombres = ?";
-        $params[] = $nombres;
-        $types .= "s";
-    }
-    if ($apellidos) {
-        $updates[] = "apellidos = ?";
-        $params[] = $apellidos;
-        $types .= "s";
-    }
-    if ($email) {
-        $updates[] = "email = ?";
-        $params[] = $email;
-        $types .= "s";
-    }
-    if ($rut) {
-        $updates[] = "rut = ?";
-        $params[] = $rut;
-        $types .= "s";
-    }
-    if ($telefono) {
-        $updates[] = "telefono = ?";
-        $params[] = $telefono;
-        $types .= "s";
-    }
-    if ($estado) {
-        $updates[] = "estado = ?";
-        $params[] = $estado;
-        $types .= "s";
-    }
-    if ($rol) {
-        $updates[] = "rol = ?";
-        $params[] = $rol;
-        $types .= "s";
-    }
-
-    if (empty($updates)) {
+    if ($result_check->num_rows > 0) {
         echo json_encode([
-            'success' => false,
-            'mensaje' => 'No hay datos para actualizar'
+            'status' => 'error',
+            'message' => 'El email ya está registrado por otro usuario'
         ]);
         exit;
     }
+    $stmt_check->close();
 
-    $sql = "UPDATE usuarios SET " . implode(", ", $updates) . " WHERE id_usuario = ?";
-    $params[] = $id_usuario;
-    $types .= "i";
+    // Actualizar usuario (usar nombres de columnas correctos: nombre y apellido singular)
+    $sql = "UPDATE usuarios SET nombre = ?, apellido = ?, email = ? WHERE id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssi", $nombres, $apellidos, $email, $id_usuario);
+
+    if ($stmt->execute()) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Usuario actualizado correctamente'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Error al actualizar usuario: ' . $stmt->error
+        ]);
+    }
+
+    $stmt->close();
+} else {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Método no permitido'
+    ]);
+}
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param($types, ...$params);

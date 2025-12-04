@@ -1,5 +1,6 @@
 package com.example.test
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,7 @@ class ListarUsuariosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListarUsuariosBinding
     private lateinit var userAdapter: UserAdapter
     private val userList = mutableListOf<User>()
+    private var currentUserId: Int = 0  // ID del usuario logueado
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,10 @@ class ListarUsuariosActivity : AppCompatActivity() {
         // Habilitar botón de volver
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Gestión de Usuarios"
+
+        // Obtener ID del usuario actual
+        val prefs = getSharedPreferences(Constants.Prefs.PREFS_NAME, Context.MODE_PRIVATE)
+        currentUserId = prefs.getInt(Constants.Prefs.KEY_USER_ID, 0)
 
         binding.recyclerViewUsers.layoutManager = LinearLayoutManager(this)
         userAdapter = UserAdapter(userList) { user ->
@@ -192,7 +198,16 @@ class ListarUsuariosActivity : AppCompatActivity() {
     }
 
     private fun showDeleteConfirmationDialog(user: User) {
-        // (Punto 10) Confirmación de eliminación
+        // Evitar que el admin se elimine a sí mismo
+        if (user.id.toInt() == currentUserId) {
+            SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Operación no permitida")
+                .setContentText("No puedes eliminar tu propia cuenta.")
+                .show()
+            return
+        }
+
+        // Confirmación de eliminación
         SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
             .setTitleText("¿Estás seguro?")
             .setContentText("Esta acción no se puede deshacer.")
@@ -209,11 +224,18 @@ class ListarUsuariosActivity : AppCompatActivity() {
         val queue = Volley.newRequestQueue(this)
         val request = object : StringRequest(Method.POST, url,
             Response.Listener {
-                sDialog.setTitleText("¡Eliminado!").setContentText("El usuario ha sido eliminado.").changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
-                cargarUsuariosDesdeServidor() // Recargar la lista
+                sDialog.setTitleText("¡Eliminado!")
+                    .setContentText("El usuario ha sido eliminado.")
+                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
+                    .setConfirmClickListener {
+                        it.dismissWithAnimation()
+                        cargarUsuariosDesdeServidor() // Recargar lista después de cerrar alert
+                    }
             },
             Response.ErrorListener {
-                sDialog.setTitleText("Error").setContentText("No se pudo eliminar al usuario.").changeAlertType(SweetAlertDialog.ERROR_TYPE)
+                sDialog.setTitleText("Error")
+                    .setContentText("No se pudo eliminar al usuario.")
+                    .changeAlertType(SweetAlertDialog.ERROR_TYPE)
             }
         ) {
             override fun getParams(): Map<String, String> = mapOf("id" to id.toString())
