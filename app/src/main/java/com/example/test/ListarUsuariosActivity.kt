@@ -224,18 +224,24 @@ class ListarUsuariosActivity : AppCompatActivity() {
         val queue = Volley.newRequestQueue(this)
         val request = object : StringRequest(Method.POST, url,
             Response.Listener {
-                sDialog.setTitleText("¡Eliminado!")
+                sDialog.dismissWithAnimation()
+                // Mostrar nuevo diálogo de éxito
+                SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("¡Eliminado!")
                     .setContentText("El usuario ha sido eliminado.")
-                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE)
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
-                        cargarUsuariosDesdeServidor() // Recargar lista después de cerrar alert
+                        cargarUsuariosDesdeServidor() // Recargar lista después de cerrar
                     }
+                    .show()
             },
             Response.ErrorListener {
-                sDialog.setTitleText("Error")
+                sDialog.dismissWithAnimation()
+                // Mostrar nuevo diálogo de error
+                SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error")
                     .setContentText("No se pudo eliminar al usuario.")
-                    .changeAlertType(SweetAlertDialog.ERROR_TYPE)
+                    .show()
             }
         ) {
             override fun getParams(): Map<String, String> = mapOf("id" to id.toString())
